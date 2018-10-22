@@ -1,4 +1,4 @@
-from flask import Flask, redirect, request, render_template
+from flask import Flask, redirect, request
 import cgi
 import os
 import jinja2
@@ -17,6 +17,8 @@ def index():
 
 @app.route("/", methods = ["POST"])
 def user_signup():
+    template_go = jinja_env.get_template("index_form.html")
+    template_now = jinja_env.get_template("welcome_form.html")
 
     username = request.form["username"]
     password = request.form["password"]
@@ -53,9 +55,9 @@ def user_signup():
             email_error = "You must enter a valid email"
     
     if not username_error and not password_error and not verify_error and not email_error:
-        return render_template("welcome_form.html", username = username)
+        return template_now.render(username = username)
     else:
-        return render_template("index_form.html",
+        return template_go.render(
         username = username,
         username_error = username_error,
         password_error = password_error,
